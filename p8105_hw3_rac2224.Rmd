@@ -1,0 +1,11 @@
+---
+title: "p8105_hw3_rac2224"
+author: "Rachel Crowley"
+date: "10/13/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
