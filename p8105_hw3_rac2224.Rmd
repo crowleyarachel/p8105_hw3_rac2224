@@ -13,7 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
-library(ggridges)
 library(knitr)
 library(p8105.datasets)
 
@@ -186,5 +185,37 @@ brfss_panel = brfss_panel[which(brfss_panel$year=='2006' | brfss_panel$year =='2
   panel1 + facet_grid(rows = vars(year))
 ```
 
+* For both 2006 and 2010 in NY, the smallest data values are distributed among the poor response category and the data values increase going from poor to fair, and from fair to good; however, in 2006, the data values distributed among the very good category appear to slightly decrease in comparison to the good category, and decreases even more from very good to excellent. In contrast, in 2010, the data values continue to slightly increase from the good to very good category, and the values distributed among the excellent variable are lower in value in comparison to the very good category. The distribution of data values for the poor response is the smallest for both 2006 and 2010, whereas the distribution of data values is wider for all other response categories in 2006 and 2010. In 2006, the distribution of data values for response categories good, very good, and excellent overlap. Similarly, in 2010, the distribution of data values for response categories good, very good, and excellent overlap, as well as slightly for the distribution of data values for response categories fair and excellent.
 
+## Problem 3
 
+Load, tidy, and wrangle accel_data
+
+```{r}
+accel_data = read_csv(file = "./data/accel_data.csv") 
+accel_data = janitor::clean_names(accel_data) 
+day = as.factor(pull(accel_data, day))
+day <- factor(day, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"), ordered = TRUE)
+levels(day)
+accel_data %>%
+  mutate(
+    weekend_v_weekday = case_when(
+      day < 6 ~ "weekday",
+      day >= 6 ~ "weekend",
+      TRUE      ~ ""
+    ))
+```
+
+* The number of observations in the dataset accel_data is `r nrow(accel_data)`. With the addition of the weekend_v_weekday variable, the number of columns in the dataset accel_data is 1444. The variables in the dataset accel_data are week, day_ID, day, activity_1 through activity_1440, and weekend_v_weekday. The dimensions of the dataset accel_data are 35, 1444. The number of missing values in the dataset accel_data is 0 since there are `r table(is.na (accel_data))` values labeled as false for missing. 
+
+Table for total activity level per day 
+
+```{r}
+accel_data %>%
+  mutate(total_activity = rowSums(.[4:1443])) %>%
+  select(day_id, day, total_activity) %>%
+  arrange(desc(total_activity)) %>%
+  knitr::kable(caption = "Total activity level per day")
+```
+
+* When looking at the total activity each day for the 35 day study period, there appears to be no trends in the level of activity, as the highest levels of total activity are from weekdays and weekends from the beginning and end of the study period, while the lowest levels of activity also include weekdays and weekends from the beginning and end of the study period. This data does not show a trend in the level of activity by day of week, or day of the study period. 
