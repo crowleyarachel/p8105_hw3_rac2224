@@ -107,5 +107,16 @@ knitr::kable(caption = "Mean hour of day for order by product name and day of we
 
 * For pink lady apples, the highest mean hour of day for an order is on Wednesday with a mean of 14.25 hours and the lowest mean hour of day for an order is on Monday with a mean of 11.36 hours. For coffee ice cream, the highest mean hour of day for an order is on Tuesday with a mean of 15.38 and the lowest mean hour of day for an order is on Friday with a mean of 12.26. 
 
+## Problem 2
 
+Data cleaning
 
+```{r}
+data("brfss_smart2010") 
+brfss_smart2010 = janitor::clean_names(brfss_smart2010) 
+brfss_smart2010 = brfss_smart2010[which(brfss_smart2010$topic=='Overall Health'| brfss_smart2010$response =='Poor'| brfss_smart2010$response =='Fair'|brfss_smart2010$response =='Good' | brfss_smart2010$response =='Very good' | brfss_smart2010$response =='Excellent'), 1:23]
+brfss_smart2010  = 
+response <- c("Poor", "Fair", "Good", "Very Good", "Excellent")
+response_ordered <- factor(response, ordered = TRUE, 
+                                levels = c("Poor", "Fair", "Good", "Very Good", "Excellent"))
+```
