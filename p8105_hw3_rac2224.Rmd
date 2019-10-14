@@ -80,7 +80,32 @@ instacart3 %>%
   knitr::kable(caption = "Number of orders for top three ordered products in the 'packaged vegetables fruits', 'baking ingredients' and 'dog good care' aisles")
 ```
 
-* The three most popular items in each aisle are as follows: for baking ingredients the items are Light Brown Sugar (499), Pure Baking Soda (387), and Cane Sugar (336); for dog food care the items are Snack Sticks Chicken & Rice Recipe Dog Treats (26), Organix Chicken & Brown Rice Recipe (28), and Small Dog Biscuits (26); for packaged vegetables fruits the items are Organic Baby Spinach (9784), Organic Raspberries (5546), Organic Blueberries (4966)
+* The three most popular items in each aisle are as follows: for baking ingredients the items are Light Brown Sugar (n=499), Pure Baking Soda (n=387), and Cane Sugar (n=336); for dog food care the items are Snack Sticks Chicken & Rice Recipe Dog Treats (n=26), Organix Chicken & Brown Rice Recipe (n=28), and Small Dog Biscuits (n=26); for packaged vegetables fruits the items are Organic Baby Spinach (n=9784), Organic Raspberries (n=5546), Organic Blueberries (n=4966).
+
+Table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week
+
+```{r}
+instacart4 = instacart[which(instacart$product_name=='Pink Lady Apples' | instacart$product_name == 'Coffee Ice Cream'), 1:15] %>%
+ select(product_name, order_dow, order_hour_of_day)%>%
+ group_by(order_dow, product_name) %>%
+ summarize(mean_hour= mean(order_hour_of_day)) %>%
+  pivot_wider(
+    names_from = "order_dow",
+    values_from = "mean_hour"
+  )
+colnames(instacart4)[colnames(instacart4)=="0"] <- "Sunday"
+colnames(instacart4)[colnames(instacart4)=="1"] <- "Monday"
+colnames(instacart4)[colnames(instacart4)=="2"] <- "Tuesday"
+colnames(instacart4)[colnames(instacart4)=="3"] <- "Wednesday"
+colnames(instacart4)[colnames(instacart4)=="4"] <- "Thursday"
+colnames(instacart4)[colnames(instacart4)=="5"] <- "Friday"
+colnames(instacart4)[colnames(instacart4)=="6"] <- "Saturday"
+colnames(instacart4)[colnames(instacart4)=="product_name"] <- "Product Name"
+instacart4 %>%
+knitr::kable(caption = "Mean hour of day for order by product name and day of week" )
+```
+
+* For pink lady apples, the highest mean hour of day for an order is on Wednesday with a mean of 14.25 hours and the lowest mean hour of day for an order is on Monday with a mean of 11.36 hours. For coffee ice cream, the highest mean hour of day for an order is on Tuesday with a mean of 15.38 and the lowest mean hour of day for an order is on Friday with a mean of 12.26. 
 
 
 
