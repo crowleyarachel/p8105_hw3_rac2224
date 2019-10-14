@@ -219,3 +219,28 @@ accel_data %>%
 ```
 
 * When looking at the total activity each day for the 35 day study period, there appears to be no trends in the level of activity, as the highest levels of total activity are from weekdays and weekends from the beginning and end of the study period, while the lowest levels of activity also include weekdays and weekends from the beginning and end of the study period. This data does not show a trend in the level of activity by day of week, or day of the study period. 
+
+Single-panel plot for 24-hour activity time courses for each day 
+
+```{r}
+accel_data %>%
+  pivot_longer(
+               activity_1:activity_1440,
+               names_to = "Time_of_day",
+                names_prefix = "activity_",
+               values_to = "Activity_level") %>%
+ggplot(aes(y = Activity_level, x = Time_of_day, color = day)) +
+      geom_point() + theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1)) +
+    labs(
+      title = "Activity level over the day by day of week",
+      x = "Time of Day",
+      y = "Activity Level",
+      caption = "Data from accel_data") + scale_x_discrete(
+        breaks = c(0, 120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200, 1320, 1440),
+        labels = c("00:00", "02:00", "04:00", "06:00","08:00", "10:00", "12:00",  "14:00", "16:00",  "18:00",  "20:00",  "22:00", "24:00")
+      ) 
+```
+
+* Based of the plot examining activity level throughout the day by day of week, regardless of day of week, activity is lowest between the hours of midnight and 4am. Peaks in activity level are seen around 4pm, between 10am-noon, between 8-10pm, and small peak around 7am. The peak seen around 4pm is mainly composed of activity levels from Saturday and Sunday, while the peak seen from 10am-noon is mainly composed of activity levels from Sunday. The peak seen at 7am is mainly composed of activity levels from Thursday. Lastly, the highest peak seen between 8-10pm includes a mix of activity level values from Friday, Wednesday, Monday, and Saturday. 
+```
+
