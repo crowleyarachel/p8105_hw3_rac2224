@@ -114,9 +114,38 @@ Data cleaning
 ```{r}
 data("brfss_smart2010") 
 brfss_smart2010 = janitor::clean_names(brfss_smart2010) 
-brfss_smart2010 = brfss_smart2010[which(brfss_smart2010$topic=='Overall Health'| brfss_smart2010$response =='Poor'| brfss_smart2010$response =='Fair'|brfss_smart2010$response =='Good' | brfss_smart2010$response =='Very good' | brfss_smart2010$response =='Excellent'), 1:23]
-brfss_smart2010  = 
-response <- c("Poor", "Fair", "Good", "Very Good", "Excellent")
-response_ordered <- factor(response, ordered = TRUE, 
-                                levels = c("Poor", "Fair", "Good", "Very Good", "Excellent"))
+brfss_smart2010 = brfss_smart2010[which(brfss_smart2010$topic=='Overall Health'| brfss_smart2010$response =='Poor'| brfss_smart2010$response =='Fair'|brfss_smart2010$response =='Good' | brfss_smart2010$response =='Very good' | brfss_smart2010$response =='Excellent'), 1:23] 
+response = as.factor(pull(brfss_smart2010, response))
+response <- factor(response, levels = c("Poor", "Fair", "Good", "Very good", "Excellent"), ordered = TRUE)
+levels(response)
+
 ```
+
+In 2002, which states were observed at 7 or more locations? 
+
+```{r}
+brfss_smart2002 = brfss_smart2010[which(brfss_smart2010$year=='2002'), 1:23] %>%
+  group_by(locationabbr) %>%
+count(locationdesc, n_distinct = n_distinct(locationdesc))%>%
+  arrange(desc(locationdesc)) %>%
+   filter(n_distinct >= 7) %>%
+  knitr::kable(Caption = "States observed at 7 or more locations in 2002")
+brfss_smart2002
+```
+
+* In 2002, the following states were observed at 7 or more locations: PA, NJ, NC, MA, FL, and CT. 
+
+In 2010, which states were obsered at 7 or more locations? 
+```{r}
+brfss_smart2010_2 = brfss_smart2010[which(brfss_smart2010$year=='2010'), 1:23] %>%
+  group_by(locationabbr) %>%
+count(locationdesc, n_distinct = n_distinct(locationdesc))%>%
+  arrange(desc(locationdesc)) %>%
+   filter(n_distinct >= 7) %>%
+  knitr::kable(Caption = "States observed at 7 or more locations in 2010")
+brfss_smart2010_2
+```
+
+* In 2010, the following states were observed at 7 or more locations: WA, TX, SC, PA, OH , NY, NJ, NE, NC, MD, MA, FL, CO, CA. 
+
+
