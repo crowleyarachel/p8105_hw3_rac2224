@@ -13,7 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(ggridges)
 library(p8105.datasets)
+
 data("instacart")
 ```
 
@@ -33,5 +35,32 @@ Examples of observations
 
 * The mean order hour of day for products from the produce department is `r mean(subset(instacart, department=='produce')$order_hour_of_day)`, the mean order hour of day for products from the frozen department is `r mean(subset(instacart, department=='frozen')$order_hour_of_day)`, and the mean order hour of day for products from the household department is `r mean(subset(instacart, department=='household')$order_hour_of_day)`. The largest number of days since prior order for an order that included something from the eggs aisle is `r max(subset(instacart, aisle =='eggs')$days_since_prior_order)` and for an order that included something from the coffee aisle is `r max(subset(instacart, aisle =='coffee')$days_since_prior_order)`.
 
+Number of aisles and aisles with most items ordered
+
+```{r}
+instacart %>%
+  count(aisle, n_distinct = n_distinct(aisle))%>%
+  arrange(desc(n)) 
+```
+
+* There 134 unique aisles in the dataset "instacart". The aisles with most items ordered include the "fresh vegetables" aisle with 150609 orders, "fresh fruits" aisle with 150473 orders, the "packaged vegetables fruits" aisle with 78493 orders, the "yogurt" aisle with 55240 orders, and the "packaged cheese" aisle with 41699 orders. 
+
+Plot for number of items ordered in each aisle
+
+```{r}
+instacart %>%
+  count(aisle, n_distinct = n_distinct(aisle))%>%
+  arrange(desc(n)) %>%
+  filter(n >= 10000) %>%
+    mutate(aisle = forcats::fct_reorder(aisle, n)) %>%
+  ggplot(aes(x=aisle, y=(n))) + geom_point() + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
+    labs(
+      title = "Number of orders per aisle for aisles with 10,000 orders or more",
+      x = "Aisle",
+      y = "Number of orders"
+    )
+```
+
+  
 
 
